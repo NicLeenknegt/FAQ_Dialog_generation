@@ -20,8 +20,3 @@ class ZoovuEntity:
             "entity": self.get_name(),
             "values": [value.to_dict() for value in self.values]
         }
-
-    def get_values(self) -> dict:
-        return {
-            "values": [value.value for value in self.values]
-        }

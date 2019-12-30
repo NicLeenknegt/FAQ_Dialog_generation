@@ -21,8 +21,6 @@ class Flow:
 
     def build_nodes(self):
         md = self.file_reader.read_file_from_path('/Users/nic/School/Bachelorproef/ClevererBot/ClevererBot/FAQ.md')
-        responses = []
-
         for line in md.split("\n\n"):
             line = line.strip()
             if line.startswith("##"):
@@ -41,26 +39,7 @@ class Flow:
                 annotation = self.format_annotation(annotation, "{", '}', intent.index, "synonym")
                 annotation = self.format_annotation(annotation, "[", ']', intent.index, "hard")
                 intent.value = annotation
-
-                if responses:
-                    self.intents[len(self.intents) - 1].insert_responses(responses)
-                    responses = []
-
                 self.intents.append(intent)
-
-            else:
-                res_lines: str = ""
-                for res in line.split("\n"):
-                    if res.strip() is not '':
-                        res_lines = res_lines + res + " "
-                    else:
-                        responses.append(res_lines)
-                        res_lines = ""
-                responses.append(res_lines)
-
-        if responses:
-            self.intents[len(self.intents) - 1].insert_responses(responses)
-            responses = []
 
         print(self.to_dict())
         with open('data.json', 'w') as json_file:
@@ -77,7 +56,7 @@ class Flow:
 
             annotation = left + "@{0}_entity_{1}{2}".format(ent_type, intent_index, count) + right
             count += 1
-       # print(annotation)
+        print(annotation)
         return annotation
 
     def find_hard_entities(self, root: str, intent_index: int) -> []:
@@ -112,7 +91,7 @@ class Flow:
                         entity.add_value(EntityValue(match))
             if entity is not None:
                 entities.append(entity)
-        #print(entities)
+        print(entities)
         return entities
 
     def to_dict(self):
