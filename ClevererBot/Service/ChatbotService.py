@@ -135,3 +135,52 @@ class ChatbotService:
         body_as_bytes = body.encode('utf-8')
         resp = request.urlopen(req, body_as_bytes)
         return resp.read()
+
+    def set_selection_policy_to_all(self, dialog_node_id: str, response_id: str,):
+        node_body = {
+            'dialogNodeId': dialog_node_id,
+            'responseId': response_id,
+            'selectionPolicy': 'ALL'
+        }
+        req = request.Request(
+            self.url.format("/chatbot/5e09d9fa43902d102a7af3f5/dialogNode/{0}/response/{1}"
+                            .format(dialog_node_id, response_id)),
+            method='PUT'
+        )
+        req.add_header('Content-Type', 'application/json')
+        body = json.dumps(node_body)
+        body_as_bytes = body.encode('utf-8')
+        resp = request.urlopen(req, body_as_bytes)
+        return resp.read()
+
+    def add_node_condition(self, dialog_node_id: str, intent:ZoovuIntent ):
+        node_body = {
+            'dialogNodeId': dialog_node_id,
+            'conditions': {'conditionData': intent.get_condition()}
+        }
+        req = request.Request(
+            self.url.format("/chatbot/5e09d9fa43902d102a7af3f5/dialogNode/{0}/nodeCondition"
+                            .format(dialog_node_id))
+        )
+        req.add_header('Content-Type', 'application/json')
+        body = json.dumps(node_body)
+        body_as_bytes = body.encode('utf-8')
+        resp = request.urlopen(req, body_as_bytes)
+        return resp.read()
+
+    def add_synonyms_to_entity_value(self, entity_id: str, value_id: str, synonyms: []):
+        node_body = {
+            'entityId': entity_id,
+            'valueId': value_id,
+            'synonyms': synonyms,
+            'searchText': ''
+        }
+        req = request.Request(
+            self.url.format("/chatbot/5e09d9fa43902d102a7af3f5/entity/{0}/value/{1}/synonym"
+                            .format(entity_id, value_id))
+        )
+        req.add_header('Content-Type', 'application/json')
+        body = json.dumps(node_body)
+        body_as_bytes = body.encode('utf-8')
+        resp = request.urlopen(req, body_as_bytes)
+        return resp.read()

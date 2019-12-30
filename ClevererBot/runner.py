@@ -1,105 +1,58 @@
 from urllib.error import HTTPError
-
-from ClevererBot.Domain.FileReader import FileReader
-import html2text
-import urllib.request
-from Domain.FileWriter import FileWriter
 from Domain.Flow import Flow
-from Service.BaseService import BaseService
-from Domain.QACollection import QACollection
-from ClevererBot.Service.ThesaurusService import ThesaurusService
-from ClevererBot.Service.MijnWoordenboekService import MijnWoordenboekService
-import re
-from Domain.SpacyNLSingleton import SpacyNLSingleton
-import spacy
 import json
-
 from Service.ChatbotService import ChatbotService
 
 
 def main():
-    #fileReader = FileReader()
-
     flow: Flow = Flow()
     flow.build_nodes()
-    #ChatbotService().create_chatbot({'name': 'test'})
-    #ChatbotService().import_intents_entities(flow.to_dict())
 
-    #=====IMPORTANT=====
-    #print(flow.to_dict()["entities"][0])
-    #resp = ChatbotService().create_entities(flow.to_dict())
-    #entities = json.loads(resp)
-    #print(entities)
-    #for ent in entities['data']:
-     #   for ent_dict in flow.entities:
-      #      if ent['updatedEntity'] == ent_dict.get_name():
-       #         try:
-        #            ChatbotService().add_value_to_entity(ent['_id'], ent_dict)
-         #       except HTTPError:
-          #          print("ERROR occurred while adding values to entities")
-    # =====IMPORTANT=====
-    #for intent in flow.intents:
-     #   intent_dict = ChatbotService().create_intents(intent)
-      #  intent_json = json.loads(intent_dict)
-       # print(intent_json)
-        #print(intent_json["data"][0]["_id"])
-       # try:
-       #     ChatbotService().add_utterances_to_intent(intent_json["data"][0]["_id"], intent)
-       # except HTTPError:
-        #    print("error when adding example to intent")
-   # result = ChatbotService().get_dialog_nodes()
-    #result_json = json.loads(result)
-    #print(result_json)
-    #for res in result_json['data']:
-      #  print(res['title'])
-       # print(res['position'])
+    build_entities(flow)
+    build_intents(flow)
     build_chatbot_nodes(flow)
 
 
-
-    #qa_col = QACollection()
-    #qa_col.file_to_qa('/Users/nic/School/Bachelorproef/ClevererBot/ClevererBot/FAQ.md')
-    #nlp = spacy.load("nl_vectors_web_lg")
-    #dict = MijnWoordenboekService()
-    #print(dict.get_synonym_list("mooi"))
-   # h = html2text.HTML2Text()
-    #h.ignore_links = True
-    #md = h.handle(dict.word_synonym("mooi").decode())
-    # print(dict.word_synonym("mooi").decode())
-    #html = re.findall("<h2>Synoniemen van.+<ul.+>.+</ul><h2>P", dict.word_synonym("mooi").decode(), re.DOTALL)[0]
-    #for a in re.findall("<a.+?>.+?</a>", html):
-    #    print(re.sub("<.+?>","", a))
-
-    #[print(m) for m in answers.split(":_:")]
-    ##qaCol = fileReader.markdownToQA(f)
-    ##qaCol.markdownAnalysys()
-
-    #ts = ThesaurusService()
-    #print(ts.get_adjective_synonym("nice"))
-
-    #uf = urllib.request.urlopen("https://words.bighugelabs.com/api/2/160285b81fbaef0b961c03fe884a0efa/nice/json")
-    #print(uf.read())
-    #uf = urllib.request.urlopen("https://services.amazon.com/selling/faq.html")
-    #h = html2text.HTML2Text()
-    #h.ignore_links = True
-    #html = uf.read()
-    #md = h.handle(html.decode())
-    #print(type(md))
-    #questions = re.findall("#.+\?", md)
-    #occurences = []
-    #for q in questions:
-    #    for pat in re.findall("^(#+)", q):
-    #        occurences.append(pat)
-    #print(occurences)
+def build_entities(flow: Flow):
+    print(flow.to_dict()["entities"][0])
+    resp = ChatbotService().create_entities(flow.to_dict())
+    entities = json.loads(resp)
+    print(entities)
+    for ent in entities['data']:
+        for ent_dict in flow.entities:
+            if ent['updatedEntity'] == ent_dict.get_name():
+                try:
+                    result_json = ChatbotService().add_value_to_entity(ent['_id'], ent_dict)
+                    result = json.loads(result_json)
+                    for entity in result['data']:
+                        if entity['updatedEntity'] == ent_dict.get_name():
+                            for value in entity['values']:
+                                for ent_value in ent_dict.values:
+                                    if ent_value.value == value['updatedValue']:
+                                        if ent_dict.type == 'synonym':
+                                            synonyms = ent_value.get_synonyms()
+                                            if synonyms:
+                                                ChatbotService().add_synonyms_to_entity_value(
+                                                    ent['_id']
+                                                    , value['_id']
+                                                    , synonyms
+                                                )
+                except HTTPError:
+                    print("ERROR occurred while adding values to entities")
 
 
-    #FileWriter().write_file("FAQ.md", [md])
+def build_intents(flow: Flow):
+    for intent in flow.intents:
+        intent_dict = ChatbotService().create_intents(intent)
+        intent_json = json.loads(intent_dict)
+        try:
+            ChatbotService().add_utterances_to_intent(intent_json["data"][0]["_id"], intent)
+        except HTTPError:
+            print("error when adding example to intent")
 
-def build_chatbot_nodes(flow:Flow):
-    result = ChatbotService().get_dialog_nodes()
-    result_json = json.loads(result)
-    print(result_json)
 
+def build_chatbot_nodes(flow: Flow):
+    ChatbotService().get_dialog_nodes()
     previous_sibling: str = None
 
     for intent in flow.intents:
@@ -115,8 +68,6 @@ def build_chatbot_nodes(flow:Flow):
                 if node['previousSibling'] == previous_sibling:
                     node_id = node['_id']
                     previous_sibling = node_id
-                    print("second")
-                    print(previous_sibling)
 
         ChatbotService().set_dialog_node_title(node_id, "node_{0}".format((intent.index + 1)))
         res = ChatbotService().add_response_to_dialog_node(node_id)
@@ -128,6 +79,9 @@ def build_chatbot_nodes(flow:Flow):
                 print(response_id)
                 if intent.responses:
                     ChatbotService().add_text_to_response(node_id, response_id, intent)
+                    ChatbotService().set_selection_policy_to_all(node_id, response_id)
+
+        ChatbotService().add_node_condition(node_id, intent)
 
 
 def most_similar(word):
@@ -136,4 +90,6 @@ def most_similar(word):
         return [w.orth_ for w in by_similarity[:10]]
     else:
         return []
+
+
 main()

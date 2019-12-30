@@ -34,3 +34,6 @@ class ZoovuIntent:
 
     def insert_responses(self, resp: []):
         self.responses = self.responses + resp
+
+    def get_condition(self):
+        return "# intent_{0}".format(self.index)

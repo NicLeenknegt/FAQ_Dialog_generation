@@ -9,7 +9,12 @@ class EntityValue:
         self.synonyms = []
 
     def find_synonyms(self):
-        self.synonyms = self.dict_service.get_adjective_synonym(self.value)
+        #self.synonyms = self.dict_service.get_adjective_synonym(self.value)
+        #print(self.synonyms)
+        self.synonyms = []
+
+    def get_synonyms(self):
+        return self.dict_service.get_adjective_synonym(self.value)
 
     def to_dict(self) -> dict:
         return {

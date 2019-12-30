@@ -84,6 +84,11 @@ class Flow:
         return self.find_entities(root, r"\[(.+?)\]", "hard", intent_index)
 
     def find_synonym_entities(self, root: str, intent_index: int) -> []:
+        entities = self.find_entities(root, r"{(.+?)}", "synonym", intent_index)
+        for ent in entities:
+            for value in ent.values:
+                value.find_synonyms()
+
         return self.find_entities(root, r"{(.+?)}", "synonym", intent_index)
 
     def find_entities(self, root: str, rematch: str, ent_type: str, intent_index: int) -> []:
@@ -102,14 +107,8 @@ class Flow:
                         entity.add_value(EntityValue(value))
                 else:
                     result: bool = True
-                    for ent in self.entities:
-                        if ent is not None:
-                            for elem in ent.values:
-                                if elem is not None:
-                                    if str(elem.value) == str(match):
-                                        result = False
-                    if result:
-                        entity.add_value(EntityValue(match))
+                    entity.add_value(EntityValue(match))
+
             if entity is not None:
                 entities.append(entity)
         #print(entities)

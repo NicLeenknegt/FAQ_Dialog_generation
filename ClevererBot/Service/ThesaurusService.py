@@ -42,7 +42,7 @@ class ThesaurusService:
         return res
 
     def get_adjective_synonym(self, word):
-        return self.get_synonyms(word, ThesaurusWordType.ADJECTIVE)
+        return self.get_synonyms(word)
 
     def get_noun_synonym(self, word):
-        return self.get_synonyms(word, ThesaurusWordType.NOUN)
+        return self.get_synonyms(word)
