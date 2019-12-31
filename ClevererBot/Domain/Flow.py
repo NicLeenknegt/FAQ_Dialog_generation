@@ -94,7 +94,7 @@ class Flow:
     def find_entities(self, root: str, rematch: str, ent_type: str, intent_index: int) -> []:
         matches: [] = re.findall(rematch, root)
         entities: [] = []
-
+        index: int = 0
         for match in matches:
             entity: ZoovuEntity = ZoovuEntity()
             entity.type = ent_type
@@ -110,6 +110,8 @@ class Flow:
                     entity.add_value(EntityValue(match))
 
             if entity is not None:
+                entity.index = index
+                index = index + 1
                 entities.append(entity)
         #print(entities)
         return entities
