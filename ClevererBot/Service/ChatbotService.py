@@ -216,3 +216,13 @@ class ChatbotService:
         body_as_bytes = body.encode('utf-8')
         resp = request.urlopen(req, body_as_bytes)
         return resp.read()
+
+    def train_watson(self, chatbot_id: str):
+        req = request.Request(
+            self.url.format("/chatbot/{0}/trainWatson"
+                            .format(chatbot_id)),
+            method='POST'
+        )
+        req.add_header('Content-Type', 'application/json')
+        resp = request.urlopen(req)
+        return resp.read()

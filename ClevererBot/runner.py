@@ -15,7 +15,7 @@ def main():
     build_entities(new_chatbot_id, flow)
     build_intents(new_chatbot_id, flow)
     build_chatbot_nodes(new_chatbot_id, flow)
-
+    train_bot(new_chatbot_id)
 
 def create_chatbot() -> str:
     result_json = ChatbotService().create_chatbot({'name': 'test_4'})
@@ -126,6 +126,9 @@ def build_chatbot_nodes(chatbot_id: str, flow: Flow):
                     ChatbotService().add_text_to_response(chatbot_id, node_id, response_id, intent.responses)
                     ChatbotService().set_selection_policy_to_all(chatbot_id, node_id, response_id)
         ChatbotService().add_node_condition(chatbot_id, node_id, intent)
+
+def train_bot(chatbot_id: str):
+    ChatbotService().train_watson(chatbot_id)
 
 def most_similar(word):
     if (word and word.vector_norm):

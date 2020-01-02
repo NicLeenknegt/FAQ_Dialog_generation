@@ -3,9 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="d5c5719b-b041-4e0d-b3be-f3a40f12caf2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ClevererBot/Domain/Flow.py" beforeDir="false" afterPath="$PROJECT_DIR$/ClevererBot/Domain/Flow.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ClevererBot/Service/ChatbotService.py" beforeDir="false" afterPath="$PROJECT_DIR$/ClevererBot/Service/ChatbotService.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ClevererBot/data.json" beforeDir="false" afterPath="$PROJECT_DIR$/ClevererBot/data.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ClevererBot/runner.py" beforeDir="false" afterPath="$PROJECT_DIR$/ClevererBot/runner.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -137,7 +135,7 @@
       <workItem from="1576607845184" duration="8645000" />
       <workItem from="1576693156787" duration="896000" />
       <workItem from="1576746139477" duration="493000" />
-      <workItem from="1577649335076" duration="29761000" />
+      <workItem from="1577649335076" duration="31075000" />
     </task>
     <servers />
   </component>
@@ -167,6 +165,6 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/ClevererBot$runner.coverage" NAME="runner Coverage Results" MODIFIED="1577793804510" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ClevererBot" />
+    <SUITE FILE_PATH="coverage/ClevererBot$runner.coverage" NAME="runner Coverage Results" MODIFIED="1577800507888" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/ClevererBot" />
   </component>
 </project>
